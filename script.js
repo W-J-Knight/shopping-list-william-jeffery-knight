@@ -3,6 +3,8 @@ const itemInput = document.getElementById("item-input");
 const itemList = document.getElementById("item-list");
 const clearBtn = document.getElementById("clear");
 const itemFilter = document.getElementById("filter");
+const formBTN = itemForm.querySelector('button')
+let isEditMode = false;
 
 function displayItems() {
   const itemsFromStorage = getItemsFromStorage();
@@ -82,7 +84,21 @@ function getItemsFromStorage() {
 function onClickItem(e) {
   if (e.target.parentElement.classList.contains("remove-item")) {
     removeItem(e.target.parentElement.parentElement);
+  } else {
+    setItemToEdit(e.target);
   }
+}
+
+function setItemToEdit(item) {
+  isEditMode = true;
+
+itemList.querySelectorAll('li').forEach((i) => i.classList.remove('edit-mode'))
+
+  item.classList.add('edit-mode')
+  formBTN.innerHTML = `<i class="fa-solid fa-pen"></i>
+   Upate Item`
+   formBTN.style.backgroundColor = '#228B22'
+   itemInput.value = item.textContent;
 }
 
 function removeItem(item) {
@@ -99,14 +115,14 @@ function removeItem(item) {
   console.log(item);
 }
 
-function removeItemFromStorage(item){
+function removeItemFromStorage(item) {
   let itemsFromStorage = getItemsFromStorage();
 
   // filter out item to be removed
-  itemsFromStorage = itemsFromStorage.filter((i) => i !== item)
+  itemsFromStorage = itemsFromStorage.filter((i) => i !== item);
 
   // re-set to localstorage
-  localStorage.setItem('items', JSON.stringify(itemsFromStorage))
+  localStorage.setItem("items", JSON.stringify(itemsFromStorage));
 }
 
 function clearItems() {
@@ -115,7 +131,7 @@ function clearItems() {
   }
 
   // clear from localstorage
-  localStorage.removeItem('items')
+  localStorage.removeItem("items");
 
   checkUI();
 }
